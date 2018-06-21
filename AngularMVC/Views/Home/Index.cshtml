@@ -1,0 +1,39 @@
+﻿@model IEnumerable<AngularMVC.Models.PersonViewModel>
+@{
+    ViewBag.Title = "Home Page";
+}
+
+<div ng-controller="MainControllerNg">
+    <br />
+    <br />
+    {{name}}
+    <form name="searchPeople">
+        <label><input type="radio" value="FirstName" ng-model="searchCriteria" checked/>By Firstname</label>
+        <label><input type="radio" value="LastName" ng-model="searchCriteria" />By Lastname</label>
+        <label><input type="radio" value="Country" ng-model="searchCriteria" />By Country</label>
+
+        <input type="search" placeholder="Search" ng-model="name"/>
+        <input type="submit" value="Search" ng-click="search(name, searchCriteria)"/>
+    </form>
+    <hr />
+    <table class="table">
+        <tr ng-repeat="p in people">  
+            <td>{{p.FirstName}}</td>
+            <td>{{p.LastName}}</td>
+            <td>{{p.Email}}</td>
+            <td>{{p.Country.CountryName}}</td>
+            <td><img ng-src="data:image/JPEG;base64,{{p.ProfilePicture}}" height="50" width="50"></td>
+        </tr>
+
+    </table>
+
+
+    @*<table class="table">
+        <tr ng-repeat="p in pictures">  
+            <td>{{p.ImageId}}</td>
+            <td>{{p.ImageName}}</td>
+            <td><img ng-src="data:image/JPEG;base64,{{p.Image}}" height="75" width="75"></td>
+        </tr>
+
+    </table>*@
+</div>
