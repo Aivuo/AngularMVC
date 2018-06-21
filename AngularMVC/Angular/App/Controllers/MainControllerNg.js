@@ -46,7 +46,7 @@
     });
 
 
-    appModule.controller('MainControllerNg', MainControllerNg);
+    appModule.controller('MainControllerNg', [MainControllerNg]);
 }());
 
 

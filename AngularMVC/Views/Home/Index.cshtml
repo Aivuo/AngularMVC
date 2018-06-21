@@ -21,18 +21,18 @@
             <td>{{p.LastName}}</td>
             <td>{{p.Email}}</td>
             <td>@using (Ajax.BeginForm("Edit", new AjaxOptions()
-                {
-                       HttpMethod = "GET",
-                       UpdateTargetId = "EditView",
-                       InsertionMode = InsertionMode.Replace
-                }))
-                {
+            {
+                HttpMethod = "GET",
+                UpdateTargetId = "EditView",
+                InsertionMode = InsertionMode.Replace
+            }))
+            {
                        <input type="hidden" name="Id" value="{{p.PersonId}}" />
                        <input type="submit" value="Edit" class="btn btn-default btn-sm" />
 
                 }</td>
             <td>{{p.Country.CountryName}}</td>
-            <td><img ng-src="data:image/JPEG;base64,{{p.ProfilePicture}}" height="50" width="50"></td>
+            <td><img ng-src="data:image/JPEG;charset=utf-8;base64,{{p.ProfilePicture}}" height="50" width="50"></td>
         </tr>
 
     </table>
