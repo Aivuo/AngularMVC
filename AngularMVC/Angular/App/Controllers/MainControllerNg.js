@@ -29,7 +29,7 @@
         });
 
         $scope.search = function (name, searchCriteria) {
-            //Doesn't work! A "/" doesnt make a difference
+            //Doesn't work! A "/" doesnt make a difference // Now Works because ?
             $http.get("/Home/SearchPeople/" + name + "?" + searchCriteria)
                 .then(onComplete); 
 
@@ -38,6 +38,9 @@
             //    .then(onComplete);
         };
 
+        $scope.edit = function (PersonId) {
+            $http.get("{Home/Edit/" + PersonId);
+        };
         
        init();
     });

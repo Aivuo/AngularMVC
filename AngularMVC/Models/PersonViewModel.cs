@@ -20,6 +20,10 @@ namespace AngularMVC.Models
         public int CountryId { get; set; }
         public Country Country { get; set; }
 
+        public PersonViewModel()
+        {
+
+        }
         public PersonViewModel(Person person)
         {
             //ImageConverter _imageConverter = new ImageConverter();

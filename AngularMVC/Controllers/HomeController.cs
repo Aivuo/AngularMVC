@@ -28,18 +28,30 @@ namespace AngularMVC.Controllers
             return View(model2);
         }
 
-        public ActionResult About()
+        
+        public ActionResult Edit(int id)
         {
-            ViewBag.Message = "Your application description page.";
+            var model = _db.People.Include("Country")
+                                  .Include("ProfilePicture").First(x => x.PersonId == id);
 
-            return View();
+            var viewModel = new PersonViewModel(model);
+            return View(viewModel);
         }
 
-        public ActionResult Contact()
+        [HttpPost]
+        public ActionResult Edit(PersonViewModel person)
         {
-            ViewBag.Message = "Your contact page.";
+            var model = _db.People.First(x => x.PersonId == person.PersonId);
+            model.FirstName = person.FirstName;
+            model.LastName = person.LastName;
+            model.Email = person.Email;
+            model.Country = person.Country;
+            model.CountryId = person.Country.CountryId;
+            model.ProfilePictureId = person.ProfilePictureId;
 
-            return View();
+            _db.SaveChanges();
+
+            return RedirectToAction("Index");
         }
 
         public JsonResult GetPerson()
@@ -84,94 +96,8 @@ namespace AngularMVC.Controllers
         public JsonResult SearchPeople()
         {
             string url = Request.RawUrl;
-            string searchCriteria = null;
-            var strings = url.Split('/');
 
-            url = null;
-
-            foreach (var item in strings)
-            {
-                if (item != "Home" && item != "SearchPeople" && item != "")
-                {
-                    if (item.Contains("?"))
-                    {
-                        var change = item.Split('?');
-                        foreach (var item2 in change)
-                        {
-                            if (item2 == "FirstName" || item2 == "LastName" || item2 == "Country")
-                            {
-                                searchCriteria = item2;
-                            }
-                            else
-                            {
-                                url = item2;
-                            }
-                        }
-
-                    }
-                    else
-                    {
-                        url = item;
-                    }
-
-
-                }
-
-                //if (item == "FirstName" || item == "LastName" || item == "Country" )
-                //{
-                //    searchCriteria = item;
-                //}
-            }
-
-
-            var result = new List<Person>();
-
-            if (url == null)
-            {
-                result = _db.People.Include("ProfilePicture")
-                                       .Include("Country").ToList();
-            }
-            else
-            {
-                url.ToLower();
-
-                if (searchCriteria != null)
-                {
-                    if (searchCriteria == "LastName")
-                    {
-                        result = _db.People.Include("ProfilePicture")
-                                           .Include("Country")
-                                           .OrderBy(x => x.LastName)
-                                           .Where(x => x.FirstName.Contains(url) || x.LastName.Contains(url))
-                                           .ToList();
-                    }
-                    else if (searchCriteria == "Country")
-                    {
-                        result = _db.People.Include("ProfilePicture")
-                                           .Include("Country")
-                                           .OrderBy(x => x.CountryId)
-                                           .Where(x => x.FirstName.Contains(url) || x.LastName.Contains(url) || x.Country.CountryName.Contains(url))
-                                           .ToList();
-                    }
-                    else
-                    {
-                        result = _db.People.Include("ProfilePicture")
-                       .Include("Country")
-                       .OrderBy(x => x.FirstName)
-                       .Where(x => x.FirstName.Contains(url) || x.LastName.Contains(url))
-                       .ToList();
-                    }
-                }
-                
-
-            }
-
-            var model = new List<PersonViewModel>();
-
-            foreach (var item in result)
-            {
-                model.Add(new PersonViewModel(item));
-            }
+            List<PersonViewModel> model = Search.FindPeople(url);
 
             return Json(model, JsonRequestBehavior.AllowGet);
 
